@@ -11,7 +11,12 @@ library(SnowballC)
 library(ggplot2)
 library(devtools)
 library(graph)
+source("https://bioconductor.org/biocLite.R")
+biocLite("RBGL")
+install_url("http://cran.r-project.org/src/contrib/Archive/graph/graph_1.30.0.tar.gz")
 library(Rgraphviz)
+source("https://bioconductor.org/biocLite.R")
+biocLite("Rgraphviz")
 library(wordcloud)
 
 #authotization for the twitter 
@@ -48,11 +53,11 @@ head(tweets.text, 10)
 #most used words
 tweets = userTimeline("Viki", n = 3200)
 
-head(tweets,100)
+head(tweets,10)
 
 tweets = userTimeline("@Viki", n = 3200)
 
-head(tweets,100)
+head(tweets,10)
 
 ## convert viki usertime data to a data frame 
 
@@ -228,33 +233,13 @@ ggplot(df, aes(x = term, y = freq)) + geom_bar(stat = "identity") +
   
   xlab("Terms") + ylab("Count") + coord_flip()
 
-# which words are associated with 'r'?
-
-##findAssocs(tdm, "like", 0.2)
-
-
+#which words are associated with 'viki'?
+###findAssocs(tdm, "like", 0.2)
 
 # which words are associated with 'viki'?
-
-##findAssocs(tdm, "hate", 0.25)
-
-
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("RBGL")
-
-#install_url("http://cran.r-project.org/src/contrib/Archive/graph/graph_1.30.0.tar.gz")
-
-
-
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("Rgraphviz")
-
-
+###findAssocs(tdm, "hate", 0.25)
 
 plot(tdm, term = freq.terms, corThreshold = 0.1, weighting = T)
-
 m <- as.matrix(tdm)
 
 # calculate the frequency of words and sort it by frequency

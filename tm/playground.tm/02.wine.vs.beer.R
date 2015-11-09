@@ -56,10 +56,10 @@ score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
 }
 
 ## loads the list of positive and negative words
-pos.words = scan(file='C:/Users/SAMSUNG/testingTextMiningTools/tm/data.tm/words.positive.txt',
+pos.words = scan(file='D:/textmining.sentiment/tm/data.tm/words.positive.txt',
                  what='character', comment.char=';')
 
-neg.words = scan(file='C:/Users/SAMSUNG/testingTextMiningTools/tm/data.tm/words.negative.txt',
+neg.words = scan(file='D:/textmining.sentiment/tm/data.tm/words.negative.txt',
                  what='character', comment.char=';')
 
 ##check the pos and neg arrays
@@ -79,41 +79,31 @@ cofe.scores$score
 soda.scores$score
 
 ## tags the stores
-wine.scores$beverage = 'Wine'
-beer.scores$beverage = 'beer'
-cofe.scores$beverage = 'cofe'
-soda.scores$beverage = 'soda'
+wine.scores$drink = 'Wine'
+beer.scores$drink = 'beer'
+cofe.scores$drink = 'cofe'
+soda.scores$drink = 'soda'
 
 # analysis = score.sentiment(delta.text, pos.words, neg.words)
-# table(analysis$Score)
+## table(analysis$Score)
 
-qplot(delta.scores$score)
+qplot(wine.scores$score)
+qplot(beer.scores$score)
+qplot(cofe.scores$score)
+qplot(soda.scores$score)
 
-
-all.scores = rbind( american.scores,  delta.scores)
+all.scores = rbind( wine.scores,  beer.scores, cofe.scores,soda.scores)
 
 ggplot(data=all.scores) + 
-  geom_bar(mapping=aes(x=score, fill=airline), binwidth=1) +
-  facet_grid(airline~.) +
+  geom_bar(mapping=aes(x=score, fill=drink), binwidth=1) +
+  facet_grid(drink~.) +
   theme_bw() + scale_fill_brewer()
-
-
-scores$drink = factor(rep(c("wine", "beer", "coffee", "soda"), nd))
-scores$very.pos = as.numeric(scores$score >= 2)
-scores$very.neg = as.numeric(scores$score <= -2)
-
-
-numpos = sum(scores$very.pos)
-numneg = sum(scores$very.neg)
-
-
-global_score = round( 100 * numpos / (numpos + numneg) )
 
 
 cols = c("#7CAE00", "#00BFC4", "#F8766D", "#C77CFF")
 names(cols) = c("beer", "coffee", "soda", "wine")
 
-# Graph 
+##boxplot
 
 ggplot(scores, aes(x=drink, y=score, group=drink)) +
 geom_boxplot(aes(fill=drink)) +
