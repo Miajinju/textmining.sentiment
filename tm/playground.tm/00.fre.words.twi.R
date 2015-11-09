@@ -11,24 +11,26 @@ library(SnowballC)
 library(ggplot2)
 library(devtools)
 library(graph)
-source("https://bioconductor.org/biocLite.R")
-biocLite("RBGL")
-install_url("http://cran.r-project.org/src/contrib/Archive/graph/graph_1.30.0.tar.gz")
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("RBGL")
 library(Rgraphviz)
-source("https://bioconductor.org/biocLite.R")
-biocLite("Rgraphviz")
+#source("https://bioconductor.org/biocLite.R")
+#biocLite("Rgraphviz")
 library(wordcloud)
 
 #authotization for the twitter 
 
-options(httr_oauth_cache = T)
+
 api_key ="NnsMrGv2CEF8g71LqVOiHdXeg"
 api_secret ="OCt39dwLhpt9WFKRq3mD9k4o2zSRagLr3GZVBjBAFzAX09pe5I"
 access_token ="142569552-AHcBcvwBckHbQOiWiwq99iXErWHJlQ7QRphyTHqz"
 access_token_secret ="mftLRi6SDv0fJ09cePgw4ae5rAJNgY3KB7rW8K68mWXa0"
 
+options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
-save(setup_twitter_oauth)
+
+
+#save(setup_twitter_oauth)
 
 # loading the data on viki
 

@@ -15,18 +15,29 @@ setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 ## loads the oauth key saved by previous section
 
 ### downloads and saves the tweets
-delta.tweets = searchTwitter('@delta', n=1500)
+tweets.to.viki = searchTwitteR("@viki", n=1500, lang="en")
+
+head(tweets.to.viki)
+
+tweets.about.viki = searchTwitter("#viki", n=1500, lang="en")
+
+head(tweets.about.viki)
+
 #save(delta.tweets, file="../data.tm/tweets.delta")
-american.tweets = searchTwitter('@AmericanAir', n=1500)
+#american.tweets = searchTwitter('@AmericanAir', n=1500)
 #save(american.tweets, file="../data.tm/tweets.american.rdata")
 
 ### loads the previously downloaded tweets
 #load("../data.tm/tweets.delta.rdata")
 #load("../data.tm/tweets.american.rdata")
 
+
 # extracts the tweets' text
-delta.text = laply(delta.tweets, function(t) t$getText() )
-american.text = laply(american.tweets, function(t) t$getText() )
+
+tweets.viki = c(tweets.to.viki, tweets.about.viki)
+
+tweets.text = lapply(tweets.viki, function(x) x$getText())
+
 
 # defines sentiment score function
 score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
@@ -60,10 +71,10 @@ score.sentiment <- function(sentences, pos.words, neg.words, .progress='none')
 }
 
 ## loads the list of positive and negative words
-pos.words = scan(file='C:/Users/SAMSUNG/testingTextMiningTools/tm/data.tm/words.positive.txt',
+pos.words = scan(file='D:/textmining.sentiment/tm/data.tm/words.positive.txt',
                   what='character', comment.char=';')
 
-neg.words = scan(file='C:/Users/SAMSUNG/testingTextMiningTools/tm/data.tm/words.negative.txt',
+neg.words = scan(file='D:/textmining.sentiment/tm/data.tm/words.negative.txt',
                   what='character', comment.char=';')
 
 ## checks the pos and neg arrays
@@ -71,32 +82,32 @@ head(pos.words)
 head(neg.words)
 
 ## scores the sentiments
-delta.scores = score.sentiment(head(delta.text,60), pos.words,neg.words, .progress='text')
-american.scores = score.sentiment(head(american.text,60), pos.words,neg.words, .progress='text')
+viki.scores = score.sentiment(head(tweets.text,60), pos.words,neg.words, .progress='text')
+##american.scores = score.sentiment(head(american.text,60), pos.words,neg.words, .progress='text')
 
 ## checks the score datasets
-delta.scores$score
-american.scores$score
+viki.scores$score
+#american.scores$score
 
 ## tags the stores
-delta.scores$airline = 'Delta'
-american.scores$airline = 'American'
+viki.scores$drama = 'viki'
+#american.scores$airline = 'American'
 
 ## makes a graph of the scores
-hist(delta.scores$score)
-hist(american.scores$score)
+hist(viki.scores$score)
+##hist(american.scores$score)
 
-# analysis = score.sentiment(delta.text, pos.words, neg.words)
-# table(analysis$Score)
-
-
-qplot(delta.scores$score)
+analysis = score.sentiment(tweets.text, pos.words, neg.words)
+table(analysis$Score)
 
 
-all.scores = rbind( american.scores,  delta.scores)
+qplot(viki.scores$score)
 
-ggplot(data=all.scores) + 
-  geom_bar(mapping=aes(x=score, fill=airline), binwidth=1) +
-  facet_grid(airline~.) +
+
+#all.scores = rbind( american.scores,  delta.scores)
+
+ggplot(data=viki.scores) + 
+  geom_bar(mapping=aes(x=score, fill=drama), binwidth=1) +
+  facet_grid(drama~.) +
   theme_bw() + scale_fill_brewer()
 
