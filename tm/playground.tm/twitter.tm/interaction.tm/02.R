@@ -17,6 +17,14 @@ options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 
+# encoding the user name on twitter 
+user = getUser('viki')
+
+#exctract friends of user
+friends = user$getFriends()
+
+head(friend,100)
+
 # defind the function
 twitterMap = function(viki, userLocation=NULL, fileName='twitterMap.pdf', nMax = 1000, plotType=c('followers','both','followings'))
 

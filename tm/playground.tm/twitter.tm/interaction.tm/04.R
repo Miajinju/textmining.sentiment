@@ -1,9 +1,12 @@
 
 # load the package
-require("RCurl")
+library("RCurl")
 top.100 = getURL("http://twittercounter.com/pages/100")
+
+install.packages("getURL")
+
 devtools::install_github("lmullen/gender")
-require("gender")
+library("gender")
 
 #authotization for the twitter 
 
