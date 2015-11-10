@@ -1,13 +1,23 @@
+#load libraries 
+
 library("twitteR")
+library("twListToDF")
+
+install.packages("twListToDF")
+
 #get data
-TB<-searchTwitter("tinderbox", lan="da", n=10000)
+TB = searchTwitter("tinderbox", lan="da", n=10000)
+
+
 #put into a dataframe
-df <- do.call("rbind", lapply(TB, as.data.frame))
-library(twitteR)
-user <- getUser("krestenb")
-followers <- user$getFollowers()
-b <- twListToDF(followers)
-f_count <- as.data.frame(b$followersCount)
+df = do.call("rbind", lapply(TB, as.data.frame))
+
+user = getUser("krestenb")
+followers = user$getFollowers()
+b = twListToDF(followers)
+
+
+f_count = as.data.frame(b$followersCount)
 u_id <- as.data.frame(b$id)
 u_sname <- as.data.frame(b$screenName)
 u_name <- as.data.frame(b$name)
