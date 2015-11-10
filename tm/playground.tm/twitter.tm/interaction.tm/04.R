@@ -1,48 +1,41 @@
+library("twitteR")
+#get data
+TB<-searchTwitter("tinderbox", lan="da", n=10000)
+#put into a dataframe
+df <- do.call("rbind", lapply(TB, as.data.frame))
+library(twitteR)
+user <- getUser("krestenb")
+followers <- user$getFollowers()
+b <- twListToDF(followers)
+f_count <- as.data.frame(b$followersCount)
+u_id <- as.data.frame(b$id)
+u_sname <- as.data.frame(b$screenName)
+u_name <- as.data.frame(b$name)
 
-# load the package
-library("RCurl")
-top.100 = getURL("http://twittercounter.com/pages/100")
+final_df <- cbind(u_id,u_name,u_sname,f_count)
+sort_fc <- final_df[order(-f_count),]
+colnames(sort_fc) <- c('id','name','s_name','fol_count')
 
-install.packages("getURL")
+#create a data frame with 4 columns and no rows initially
+df_result <- data.frame(t(rep(NA, 4)))
+names(df_result) <- c('id', 'name', 's_name', 'fol_count')
+df_result <- df_result[0:0,]
 
-devtools::install_github("lmullen/gender")
-library("gender")
+# you can replace this vector with whatever set of Twitter users you want
+users <- c("krestenb", "tjb25587")                    # tjb25587 (me) has no followers
 
-#authotization for the twitter 
-
-api_key ="NnsMrGv2CEF8g71LqVOiHdXeg"
-api_secret ="OCt39dwLhpt9WFKRq3mD9k4o2zSRagLr3GZVBjBAFzAX09pe5I"
-access_token ="142569552-AHcBcvwBckHbQOiWiwq99iXErWHJlQ7QRphyTHqz"
-access_token_secret ="mftLRi6SDv0fJ09cePgw4ae5rAJNgY3KB7rW8K68mWXa0"
-
-options(httr_oauth_cache = T)
-setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
-
-
-# split into lines
-top.100 = unlist(strsplit(top.100, "\n"))
-head(top.100)
-
-# Get only those lines with an @
-top.100 = top.100[sapply(top.100, grepl, pattern="@")]
-head(top.100)
-
-# Grep out anchored usernames: <a ...>@username</a>
-top.100 = gsub(".*>@(.+)<.*", "\\1", top.100)[2:101]
-head(top.100)
-
-
-# Try to sample 300 followers for a user:
-viki$getFollowers(n=300)
-
-# Error in twFromJSON(out) :
-#  Error: Malformed response from server, was not JSON.
-# The most likely cause of this error is Twitter returning
-# a character which can't be properly parsed by R. Generally
-# the only remedy is to wait long enough for the offending
-# character to disappear from searches.
-
-gender("ben")
-
-
-
+sapply(users, function(x) {
+  user <- getUser(x)
+  followers <- user$getFollowers()
+  if (length(followers) > 0) {        # ignore users with no followers
+    b <- twListToDF(followers)
+    f_count <- as.data.frame(b$followersCount)
+    u_id <- as.data.frame(b$id)
+    u_sname <- as.data.frame(b$screenName)
+    u_name <- as.data.frame(b$name)
+    final_df <- cbind(u_id,u_name,u_sname,f_count)
+    sort_fc <- final_df[order(-f_count),]
+    colnames(sort_fc) <- c('id','name','s_name','fol_count')
+    df_result <<- rbind(df_result, sort_fc)
+  }
+})

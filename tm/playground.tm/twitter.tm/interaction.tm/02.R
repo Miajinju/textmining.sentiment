@@ -1,10 +1,10 @@
+# Script for graphing Twitter friends/followers
 
-# load libraries
-#install.packages("maps")
-#install.packages("geosphere")
-source('http://biostat.jhsph.edu/~jleek/code/twitterMap.R')
-library(twitteR)
-library(maps)
+# load the required packages
+
+library("twitteR")
+          #install.packages("igraph")
+library("igraph")
 
 #authotization for the twitter 
 
@@ -17,32 +17,38 @@ options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 
-# encoding the user name on twitter 
-user = getUser('viki')
+# Get User Information with twitteR function getUSer(), 
 
-#exctract friends of user
-friends = user$getFriends()
+viki = getUser("viki") 
 
-head(friend,100)
+# Get Friends and Follower names with first fetching IDs (getFollowerIDs(),getFriendIDs()) 
+  #and then looking up the names (lookupUsers()) 
 
-# defind the function
-twitterMap = function(viki, userLocation=NULL, fileName='twitterMap.pdf', nMax = 1000, plotType=c('followers','both','followings'))
+friends.viki = lookupUsers(viki$getFriendIDs())
 
-##userName – the twitter username you want to plot
-##userLocation – an optional argument giving the location of the user, 
-  ##necessary when the location information you have provided Twitter isn’t sufficient for us to find latitude/longitude data
-##fileName – the file where you want the plot to appear
-##nMax – The maximum number of followers/following to get from Twitter, this is implemented to avoid rate limiting for people with large numbers of followers. 
-##plotType – if “both” both followers/following are plotted, etc.
-  
 
-twitterMap('simplystats')
+follower.viki = lookupUsers(viki$getFollowerIDs())
 
-#?# cannot find the > data(followers.viki)
+# Retrieve the names of your friends and followers from the friend and follower objects. 
+# You can limit the number of friends and followers with [1:n]
+# friends and/or followers will be visualized.
 
-##grep('Baltimore', world.cities[,1])
+n = 150
+friends = sapply(friends.viki[1:n])
+followers = sapply(followers.viki[1:n],name)
 
-#If your city is in the database, 
-#this will return the row number of the world.
-#cities data frame corresponding to your city. 
+# Create a data frame that relates friends and followers to you for expression in the graph
+relations = merge(data.frame(User='viki', Follower=friends), 
+                   data.frame(User=followers, Follower='viki'), 
+                  all=T)
+
+# Create graph from relations.
+g = graph.data.frame(relations, directed = T)
+
+# Assign labels to the graph (=people's names)
+V(g)$label = V(g)$name
+
+# Plot the graph using plot() or tkplot(). 
+tkplot(g)
+
 

@@ -1,10 +1,12 @@
-# Script for graphing Twitter friends/followers
 
-# load the required packages
+# load the package
+library("RCurl")
+top.100 = getURL("http://twittercounter.com/pages/100")
 
-library("twitteR")
-          #install.packages("igraph")
-library("igraph")
+install.packages("getURL")
+
+devtools::install_github("lmullen/gender")
+library("gender")
 
 #authotization for the twitter 
 
@@ -17,38 +19,30 @@ options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 
-# Get User Information with twitteR function getUSer(), 
+# split into lines
+top.100 = unlist(strsplit(top.100, "\n"))
+head(top.100)
 
-viki = getUser("viki") 
+# Get only those lines with an @
+top.100 = top.100[sapply(top.100, grepl, pattern="@")]
+head(top.100)
 
-# Get Friends and Follower names with first fetching IDs (getFollowerIDs(),getFriendIDs()) 
-  #and then looking up the names (lookupUsers()) 
+# Grep out anchored usernames: <a ...>@username</a>
+top.100 = gsub(".*>@(.+)<.*", "\\1", top.100)[2:101]
+head(top.100)
 
-friends.viki = lookupUsers(viki$getFriendIDs())
 
+# Try to sample 300 followers for a user:
+viki$getFollowers(n=300)
 
-follower.viki = lookupUsers(viki$getFollowerIDs())
+# Error in twFromJSON(out) :
+#  Error: Malformed response from server, was not JSON.
+# The most likely cause of this error is Twitter returning
+# a character which can't be properly parsed by R. Generally
+# the only remedy is to wait long enough for the offending
+# character to disappear from searches.
 
-# Retrieve the names of your friends and followers from the friend and follower objects. 
-# You can limit the number of friends and followers with [1:n]
-# friends and/or followers will be visualized.
+gender("ben")
 
-n = 150
-friends = sapply(friends.viki[1:n])
-followers = sapply(followers.viki[1:n],name)
-
-# Create a data frame that relates friends and followers to you for expression in the graph
-relations = merge(data.frame(User='viki', Follower=friends), 
-                   data.frame(User=followers, Follower='viki'), 
-                  all=T)
-
-# Create graph from relations.
-g = graph.data.frame(relations, directed = T)
-
-# Assign labels to the graph (=people's names)
-V(g)$label = V(g)$name
-
-# Plot the graph using plot() or tkplot(). 
-tkplot(g)
 
 
