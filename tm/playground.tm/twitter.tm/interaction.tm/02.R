@@ -1,5 +1,12 @@
-#authotization for the twitter 
 
+# load libraries
+#install.packages("maps")
+#install.packages("geosphere")
+source('http://biostat.jhsph.edu/~jleek/code/twitterMap.R')
+library(twitteR)
+library(maps)
+
+#authotization for the twitter 
 
 api_key ="NnsMrGv2CEF8g71LqVOiHdXeg"
 api_secret ="OCt39dwLhpt9WFKRq3mD9k4o2zSRagLr3GZVBjBAFzAX09pe5I"
@@ -10,15 +17,8 @@ options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 
-# load libraries
-
-source('http://biostat.jhsph.edu/~jleek/code/twitterMap.R')
-
 # defind the function
-twitterMap <- function(
-        viki,userLocation=NULL,
-        fileName='twitterMap.pdf',nMax = 1000,
-        plotType=c('followers','both','following'))
+twitterMap = function(viki, userLocation=NULL, fileName='twitterMap.pdf', nMax = 1000, plotType=c('followers','both','followings'))
 
 ##userName – the twitter username you want to plot
 ##userLocation – an optional argument giving the location of the user, 
@@ -27,14 +27,10 @@ twitterMap <- function(
 ##nMax – The maximum number of followers/following to get from Twitter, this is implemented to avoid rate limiting for people with large numbers of followers. 
 ##plotType – if “both” both followers/following are plotted, etc.
   
+
 twitterMap('simplystats')
 
-#If your location can’t be found or latitude longitude can’t be calculated, you may have to chose a bigger city near you. 
-##The list of cities used by twitterMap can be found like so:
-  
-library(maps)
-
-data(followers.viki)
+#?# cannot find the > data(followers.viki)
 
 ##grep('Baltimore', world.cities[,1])
 

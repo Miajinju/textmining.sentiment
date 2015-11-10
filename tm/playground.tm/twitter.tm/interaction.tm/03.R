@@ -1,7 +1,12 @@
 # Script for graphing Twitter friends/followers
 
-#authotization for the twitter 
+# load the required packages
 
+library("twitteR")
+          #install.packages("igraph")
+library("igraph")
+
+#authotization for the twitter 
 
 api_key ="NnsMrGv2CEF8g71LqVOiHdXeg"
 api_secret ="OCt39dwLhpt9WFKRq3mD9k4o2zSRagLr3GZVBjBAFzAX09pe5I"
@@ -12,12 +17,6 @@ options(httr_oauth_cache = T)
 setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 
 
-# load the required packages
-
-library("twitteR")
-library("igraph")
-
-
 # Get User Information with twitteR function getUSer(), 
 
 viki = getUser("viki") 
@@ -26,6 +25,8 @@ viki = getUser("viki")
   #and then looking up the names (lookupUsers()) 
 
 friends.viki = lookupUsers(viki$getFriendIDs())
+
+
 follower.viki = lookupUsers(viki$getFollowerIDs())
 
 # Retrieve the names of your friends and followers from the friend and follower objects. 
@@ -33,12 +34,13 @@ follower.viki = lookupUsers(viki$getFollowerIDs())
 # friends and/or followers will be visualized.
 
 n = 150
-friends = sapply(friends.object[1:n],name)
-followers = sapply(followers.object[1:n],name)
+friends = sapply(friends.viki[1:n])
+followers = sapply(followers.viki[1:n],name)
 
 # Create a data frame that relates friends and followers to you for expression in the graph
 relations = merge(data.frame(User='viki', Follower=friends), 
-                   data.frame(User=followers, Follower='viki'), all=T)
+                   data.frame(User=followers, Follower='viki'), 
+                  all=T)
 
 # Create graph from relations.
 g = graph.data.frame(relations, directed = T)
