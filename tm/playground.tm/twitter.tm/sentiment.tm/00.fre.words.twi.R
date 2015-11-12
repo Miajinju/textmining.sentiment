@@ -57,9 +57,6 @@ tweets = userTimeline("Viki", n = 3200)
 
 head(tweets,10)
 
-tweets = userTimeline("@Viki", n = 3200)
-
-head(tweets,10)
 
 ## convert viki usertime data to a data frame 
 
