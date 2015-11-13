@@ -1,4 +1,3 @@
-
 # load libraries
 #install.packages("maps")
 #install.packages("geosphere")

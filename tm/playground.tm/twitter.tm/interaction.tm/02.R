@@ -26,6 +26,7 @@ viki = getUser("viki")
 
 friends.viki = lookupUsers(viki$getFriendIDs())
 
+head(friends.viki)
 
 follower.viki = lookupUsers(viki$getFollowerIDs())
 
