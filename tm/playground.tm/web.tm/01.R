@@ -1,28 +1,35 @@
-install.packages
-#To see rvest in action, imagine we’d like to scrape some information about The Lego Movie from IMDB. We start by downloading and parsing the file with html():
+#-------------------install packages ---------------------
+
+install.packages('rvest')
+
+#-------------------library-----------------------------
   
   library(rvest)
-lego_movie <- html("http://www.imdb.com/title/tt1490017/")
- 
-#We use html_node() to find the first node that matches that selector, extract its contents with html_text(), and convert it to numeric with as.numeric():
-lego_movie %>% 
-  html_node("strong span") %>%
+
+# ---------------extract data---------------------------
+#lego_movie <- html("http://www.imdb.com/title/tt1490017/")
+epi = html("https://disqus.com/embed/comments/?base=default&version=7bc87d1330c2b2e260ee5892e4ebef9e&f=vikiorg&t_i=1088594v&t_u=https%3A%2F%2Fwww.viki.com%2Fvideos%2F1088594v-oh-my-venus-episode-4&t_d=Oh%20My%20Venus%20Episode%204%20-%20오%20마이%20비너스%20-%20Watch%20Full%20Episodes%20Free%20-%20Korea%20-%20TV%20Shows%20-%20Viki&t_t=Oh%20My%20Venus%20Episode%204%20-%20오%20마이%20비너스%20-%20Watch%20Full%20Episodes%20Free%20-%20Korea%20-%20TV%20Shows%20-%20Viki&s_o=default&l=en") 
+
+#lego_movie %>% 
+#  html_node("strong span") %>%
+#  html_text() %>%
+#  as.numeric()
+epi %>%
+  html_node("") %>%
   html_text() %>%
-  as.numeric()
+  as.uumeric()
 
-#We use a similar process to extract the cast, using html_nodes() to find all nodes that match the selector
-lego_movie %>%
-  html_nodes("#titleCast .itemprop span") %>%
-  html_text()
+? html_node
+#lego_movie %>%
+  #html_nodes("#titleCast .itemprop span") %>%
+  #html_text()
 
-#The titles and authors of recent message board postings are stored in a the third table on the page. We can use html_node() and [[ to find it, then coerce it to a data frame with html_table(
+#------------data frame with table--------------------
 lego_movie %>%
   html_nodes("table") %>%
   .[[3]] %>%
   html_table()
 
-#If you prefer, you can use xpath selectors instead of css: 
-html_nodes(doc, xpath = "//table//td").
 #Extract the tag names with html_tag(), text with html_text(), a single attribute with html_attr() or all attributes with html_attrs().
 
 #Detect and repair text encoding problems with guess_encoding() and repair_encoding().
